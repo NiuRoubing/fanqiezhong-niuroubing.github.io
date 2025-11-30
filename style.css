@@ -1,0 +1,316 @@
+/* 自定义样式 */
+
+/* 基础样式 */
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: #FFF8E6; /* 淡黄色背景 */
+  color: #1A535C; /* 深青色文字 */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 20px;
+}
+
+.container {
+  max-width: 500px;
+  width: 100%;
+}
+
+/* 标题样式 */
+h1 {
+  font-weight: 700;
+  color: #FF6B6B; /* 番茄红色 */
+  text-align: center;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 模式切换按钮样式 */
+.mode-btn {
+  transition: all 0.3s ease;
+}
+
+.mode-btn.active {
+  background-color: #FF6B6B;
+  color: white;
+  border-color: #FF6B6B;
+}
+
+.mode-btn.active:hover {
+  background-color: #FF5252;
+  color: white;
+}
+
+/* 计时显示区域样式 */
+.timer-container {
+  position: relative;
+  margin: 2rem 0;
+}
+
+/* 圆形进度条样式 */
+.progress-ring-container {
+  position: relative;
+  width: 250px;
+  height: 250px;
+  margin: 0 auto;
+}
+
+.progress-ring {
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  transition: stroke-dashoffset 1s linear;
+}
+
+.progress-ring-bg {
+  fill: none;
+  stroke: #E5E7EB;
+  stroke-width: 8;
+}
+
+.progress-ring-circle {
+  fill: none;
+  stroke: #FF6B6B; /* 番茄红色 */
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+
+/* 计时文字样式 */
+.timer-display {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  font-weight: 700;
+  text-align: center;
+  color: #1A535C;
+}
+
+.timer-status {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.9rem;
+  color: #6B7280;
+  text-align: center;
+}
+
+/* 控制按钮样式 */
+.control-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.start-btn {
+  background-color: #FF6B6B;
+  color: white;
+  box-shadow: 0 4px 6px rgba(255, 107, 107, 0.3);
+}
+
+.start-btn:hover {
+  background-color: #FF5252;
+  box-shadow: 0 6px 8px rgba(255, 82, 82, 0.4);
+}
+
+.pause-btn, .reset-btn {
+  background-color: #F3F4F6;
+  color: #4B5563;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.pause-btn:hover, .reset-btn:hover {
+  background-color: #E5E7EB;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* 设置区域样式 */
+.settings-container {
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.settings-title {
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #FF6B6B;
+}
+
+/* 输入框样式 */
+input[type="number"] {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #D1D5DB;
+  border-radius: 0.375rem;
+  transition: all 0.3s ease;
+}
+
+input[type="number"]:focus {
+  outline: none;
+  border-color: #FF6B6B;
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+}
+
+/* 复选框样式 */
+input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 0.25rem;
+  border: 1px solid #D1D5DB;
+  transition: all 0.3s ease;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #FF6B6B;
+  border-color: #FF6B6B;
+}
+
+/* 统计信息区域样式 */
+.stats-container {
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.stats-title {
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #FF6B6B;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.stats-item {
+  text-align: center;
+}
+
+.stats-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #FF6B6B;
+}
+
+.stats-label {
+  font-size: 0.875rem;
+  color: #6B7280;
+}
+
+/* 帮助模态框样式 */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 1rem;
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.close-modal {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #6B7280;
+}
+
+/* 背景选择器样式 */
+.background-option {
+  transition: all 0.3s ease;
+}
+
+.background-option:hover {
+  transform: scale(1.05);
+}
+
+.background-option.active {
+  border-color: #FF6B6B;
+}
+
+/* 响应式样式 */
+@media (max-width: 640px) {
+  .progress-ring-container {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .timer-display {
+    font-size: 2.5rem;
+  }
+  
+  .control-buttons {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .control-btn {
+    width: 100%;
+  }
+}
+
+/* 动画效果 */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.pulse-animation {
+  animation: pulse 1.5s infinite;
+}
+
+/* 深色玻璃效果 */
+.glass-dark {
+  background: rgba(26, 32, 44, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}

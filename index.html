@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>番茄时光 - 自律计时工具</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- 自定义Tailwind配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FF6B6B', // 番茄红色
+            secondary: '#4ECDC4', // 青色
+            background: '#FFF8E6', // 淡黄色背景
+            dark: '#1A535C', // 深青色文字
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          }
+        }
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .glass {
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      .text-shadow {
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .transition-all-300 {
+        transition: all 0.3s ease;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-background min-h-screen flex flex-col">
+  <div class="container mx-auto px-4 py-8 max-w-md">
+    <!-- 标题区域 -->
+    <header class="text-center mb-8">
+      <h1 class="text-[clamp(1.8rem,5vw,2.5rem)] font-bold text-primary text-shadow">番茄时光</h1>
+      <p class="text-gray-600">专注当下，高效自律</p>
+    </header>
+    
+    <!-- 模式切换区域 -->
+    <div class="flex justify-center gap-2 mb-8">
+      <button id="pomodoro-btn" class="mode-btn px-4 py-2 rounded-full border-2 border-gray-300 bg-white text-gray-700 font-medium hover:bg-gray-100 active">
+        <i class="fa fa-clock-o mr-1"></i>番茄钟
+      </button>
+      <button id="stopwatch-btn" class="mode-btn px-4 py-2 rounded-full border-2 border-gray-300 bg-white text-gray-700 font-medium hover:bg-gray-100">
+        <i class="fa fa-hourglass-start mr-1"></i>正计时
+      </button>
+      <button id="timer-btn" class="mode-btn px-4 py-2 rounded-full border-2 border-gray-300 bg-white text-gray-700 font-medium hover:bg-gray-100">
+        <i class="fa fa-hourglass-end mr-1"></i>倒计时
+      </button>
+    </div>
+    
+    <!-- 核心计时区域 -->
+    <div class="timer-container mb-8">
+      <div class="progress-ring-container mx-auto relative">
+        <svg width="250" height="250" class="progress-ring">
+          <circle class="progress-ring-bg" stroke="#E5E7EB" stroke-width="8" fill="transparent" r="115" cx="125" cy="125"/>
+          <circle id="progress-ring" class="progress-ring-circle" stroke="#FF6B6B" stroke-width="8" fill="transparent" r="115" cx="125" cy="125" stroke-dasharray="722.56" stroke-dashoffset="722.56"/>
+        </svg>
+        
+        <!-- 计时显示 -->
+        <div class="absolute inset-0 flex flex-col items-center justify-center">
+          <div id="timer-display" class="text-[clamp(2.5rem,8vw,4rem)] font-bold text-dark">25:00</div>
+          <div id="timer-status" class="text-sm text-gray-500 mt-2">工作准备</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 控制按钮区域 -->
+    <div class="flex justify-center gap-4 mb-8">
+      <button id="start-btn" class="control-btn start-btn">
+        <i class="fa fa-play mr-2"></i>开始
+      </button>
+      <button id="pause-btn" class="control-btn pause-btn hidden">
+        <i class="fa fa-pause mr-2"></i>暂停
+      </button>
+      <button id="reset-btn" class="control-btn reset-btn">
+        <i class="fa fa-refresh mr-2"></i>重置
+      </button>
+    </div>
+    
+    <!-- 设置区域 -->
+    <div class="settings-container glass rounded-xl p-6 shadow-lg mb-8">
+      <h2 class="text-lg font-semibold mb-4 flex items-center">
+        <i class="fa fa-sliders mr-2 text-primary"></i>设置
+      </h2>
+      
+      <!-- 背景设置 -->
+      <div class="mb-6">
+        <h3 class="text-md font-medium mb-3 flex items-center">
+          <i class="fa fa-paint-brush mr-2 text-primary"></i>背景选择
+        </h3>
+        <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3" id="background-options">
+          <div class="background-option cursor-pointer rounded-lg overflow-hidden border-2 border-primary" data-bg="default">
+            <div class="w-full h-12 bg-background"></div>
+          </div>
+          <!-- 黄色系 -->
+          <div class="background-option cursor-pointer rounded-lg overflow-hidden border-2 border-transparent" data-bg="yellow-light">
+            <div class="w-full h-12 bg-[#FFF8E6]"></div>
+          </div>
+          <div class="background-option cursor-pointer rounded-lg overflow-hidden border-2 border-transparent" data-bg="yellow">
+            <div class="w-full h-12 bg-[#FFF3CD]"></div>
+          </div>
+          <div class="background-option cursor-pointer rounded-lg overflow-hidden border-2 border-transparent" data-bg="yellow-dark">
+            <div class="w-full h-12 bg-[#FFE5B4]"></div>
+          </div>
+          <!-- 红色系 -->
+          <div class="background-option cursor-pointer rounded-lg overflow-hidden border-2 border-transparent" data-bg="red-light">
+            <div class="w-full h-12 bg-[#FFE5E5]"></div>
+          </div>
+          <div class="background-option cursor-pointer rounded-lg overflow-hidden border-2 border-transparent" data-bg="red">
+            <div class="w-full h-12 bg-[#FFCDD2]"></div>
+          </div>
+          <!-- 蓝色系 -->
+          <div class="background-option cursor-pointer rounded-lg overflow-hidden border-2 border-transparent" data-bg="blue-light">
+            <div class="w-full h-12 bg-[#E6F7FF]"></div>
+          </div>
+          <div class="background-option cursor-pointer rounded-lg overflow-hidden border-2 border-transparent" data-bg="blue">
+            <div class="w-full h-12 bg-[#BBDEFB]"></div>
+          </div>
+          <div class="background-option cursor-pointer rounded-lg overflow-hidden border-2 border-transparent" data-bg="blue-dark">
+            <div class="w-full h-12 bg-[#90CAF9]"></div>
+          </div>
+          <!-- 绿色系 -->
+          <div class="background-option cursor-pointer rounded-lg overflow-hidden border-2 border-transparent" data-bg="green-light">
+            <div class="w-full h-12 bg-[#E6FFEE]"></div>
+          </div>
+          <div class="background-option cursor-pointer rounded-lg overflow-hidden border-2 border-transparent" data-bg="green">
+            <div class="w-full h-12 bg-[#C8E6C9]"></div>
+          </div>
+          <!-- 紫色系 -->
+          <div class="background-option cursor-pointer rounded-lg overflow-hidden border-2 border-transparent" data-bg="purple-light">
+            <div class="w-full h-12 bg-[#F0F0FF]"></div>
+          </div>
+          <div class="background-option cursor-pointer rounded-lg overflow-hidden border-2 border-transparent" data-bg="purple">
+            <div class="w-full h-12 bg-[#E1BEE7]"></div>
+          </div>
+          <!-- 粉色系 -->
+          <div class="background-option cursor-pointer rounded-lg overflow-hidden border-2 border-transparent" data-bg="pink-light">
+            <div class="w-full h-12 bg-[#FFEBEE]"></div>
+          </div>
+          <div class="background-option cursor-pointer rounded-lg overflow-hidden border-2 border-transparent" data-bg="pink">
+            <div class="w-full h-12 bg-[#FCE4EC]"></div>
+          </div>
+          <!-- 灰色系 -->
+          <div class="background-option cursor-pointer rounded-lg overflow-hidden border-2 border-transparent" data-bg="gray-light">
+            <div class="w-full h-12 bg-[#F5F5F5]"></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 番茄钟设置 -->
+      <div id="pomodoro-settings" class="space-y-4">
+        <div>
+          <label for="work-duration" class="block text-sm font-medium text-gray-700 mb-1">工作时长 (分钟)</label>
+          <input type="number" id="work-duration" min="1" max="60" value="25" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+        </div>
+        <div>
+          <label for="break-duration" class="block text-sm font-medium text-gray-700 mb-1">休息时长 (分钟)</label>
+          <input type="number" id="break-duration" min="1" max="60" value="5" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+        </div>
+        <div class="flex items-center">
+          <input id="auto-start-break" type="checkbox" checked class="w-4 h-4 text-primary focus:ring-primary border-gray-300 rounded">
+          <label for="auto-start-break" class="ml-2 block text-sm text-gray-700">自动开始休息</label>
+        </div>
+        <div class="flex items-center">
+          <input id="auto-start-pomodoro" type="checkbox" checked class="w-4 h-4 text-primary focus:ring-primary border-gray-300 rounded">
+          <label for="auto-start-pomodoro" class="ml-2 block text-sm text-gray-700">自动开始下一个番茄钟</label>
+        </div>
+      </div>
+      
+      <!-- 倒计时设置 (初始隐藏) -->
+      <div id="timer-settings" class="space-y-4 hidden">
+        <div class="grid grid-cols-3 gap-4">
+          <div>
+            <label for="hours" class="block text-sm font-medium text-gray-700 mb-1">时</label>
+            <input type="number" id="hours" min="0" max="23" value="0" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+          </div>
+          <div>
+            <label for="minutes" class="block text-sm font-medium text-gray-700 mb-1">分</label>
+            <input type="number" id="minutes" min="0" max="59" value="0" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+          </div>
+          <div>
+            <label for="seconds" class="block text-sm font-medium text-gray-700 mb-1">秒</label>
+            <input type="number" id="seconds" min="0" max="59" value="0" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+          </div>
+        </div>
+        <button id="set-timer-btn" class="w-full px-4 py-2 bg-primary hover:bg-primary/90 text-white font-medium rounded-md shadow hover:shadow-md transition-all-300">
+          设置倒计时
+        </button>
+      </div>
+      
+      <!-- 正计时设置 (初始隐藏，实际上可能不需要设置) -->
+      <div id="stopwatch-settings" class="hidden">
+        <p class="text-sm text-gray-500 italic">正计时模式无需额外设置</p>
+      </div>
+    </div>
+    
+    <!-- 统计信息区域 -->
+    <div class="stats-container glass rounded-xl p-6 shadow-lg mb-8">
+      <h2 class="text-lg font-semibold mb-4 flex items-center">
+        <i class="fa fa-bar-chart mr-2 text-primary"></i>今日统计
+      </h2>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="text-center">
+          <p class="text-sm text-gray-500">完成番茄钟</p>
+          <p id="completed-pomodoros" class="text-2xl font-bold text-primary">0</p>
+        </div>
+        <div class="text-center">
+          <p class="text-sm text-gray-500">专注时长</p>
+          <p id="focus-time" class="text-2xl font-bold text-primary">00:00</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+  
+  <audio id="timer-end-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3" preload="auto"></audio>
+ 
+  <script src="script.js"></script>
+  
+  <!-- 版权信息 -->
+  <footer class="mt-auto py-4 text-center text-sm text-gray-500">
+    <p>本网站由"牛肉饼"借助AI技术编写</p>
+  </footer>
+</body>
+</html>
